@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">OpenScore</string>
+    <string name="title_activity_main">OpenScore</string>
+    <string name="package_name">com.openscore.sbs</string>
+    <string name="custom_url_scheme">com.openscore.sbs</string>
+</resources>

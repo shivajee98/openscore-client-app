@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,84583,e=>{"use strict";var r=e.i(82568);class a extends r.WebPlugin{async getReferrerDetails(){throw this.unavailable("Install Referrer is only available on Android.")}}e.s(["CapacitorReferrerWeb",()=>a])}]);

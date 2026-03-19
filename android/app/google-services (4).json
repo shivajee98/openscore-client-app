@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "190101745853",
+    "project_id": "open-score-3f0da",
+    "storage_bucket": "open-score-3f0da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190101745853:android:7281b6afc01c4e362c87d4",
+        "android_client_info": {
+          "package_name": "com.openscore.sbs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb08cUv5j13pPcmuacoAt3DC8hVdf3wFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
