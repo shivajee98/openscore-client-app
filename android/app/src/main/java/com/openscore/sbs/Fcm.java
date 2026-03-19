@@ -3,10 +3,10 @@ package com.openscore.sbs;
 import android.Manifest;
 import android.util.Log;
 import androidx.annotation.RequiresPermission;
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.capacitorjs.plugins.pushnotifications.MessagingService;
 
-public class Fcm extends FirebaseMessagingService {
+public class Fcm extends MessagingService {
     
     @Override
     public void onNewToken(String token) {

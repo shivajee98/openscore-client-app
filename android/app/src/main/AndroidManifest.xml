@@ -43,11 +43,11 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- <service android:name=".Fcm" android:exported="false">
-            <intent-filter>
+        <service android:name=".Fcm" android:exported="false">
+            <intent-filter android:priority="999">
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service> -->
+        </service>
     </application>
 
     <!-- Permissions -->
