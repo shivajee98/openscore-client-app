@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/overlay_bg"
+    android:padding="20dp"
+    android:layout_margin="16dp"
+    android:elevation="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Notification"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#1e293b"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Something important happened in Open Score."
+        android:textSize="16sp"
+        android:textColor="#64748b"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="Dismiss"
+            android:background="?android:attr/selectableItemBackground"
+            android:textColor="#94a3b8"
+            android:layout_marginRight="12dp"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/btn_open"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="Open App"
+            android:textColor="#ffffff"
+            android:background="@drawable/btn_primary_bg"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</LinearLayout>

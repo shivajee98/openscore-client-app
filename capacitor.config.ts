@@ -8,11 +8,6 @@ const config: CapacitorConfig = {
     loggingBehavior: 'debug',
     webContentsDebuggingEnabled: true
   },
-  server: {
-    url: 'https://openscore.msmeloan.sbs/',
-    allowNavigation: ['openscore.msmeloan.sbs'],
-    androidScheme: 'https'
-  },
   plugins: {
     CapacitorHttp: {
       enabled: false

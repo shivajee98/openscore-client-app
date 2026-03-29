@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.WindowManager;
 import com.getcapacitor.BridgeActivity;
 import com.google.firebase.FirebaseApp;
 
@@ -13,6 +14,32 @@ public class MainActivity extends BridgeActivity {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         createNotificationChannel();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | android.view.WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                    | android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        } else {
+            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    | android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | android.view.WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                    | android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        }
+
+        // --- Overlay Permission ---
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!android.provider.Settings.canDrawOverlays(this)) {
+                android.content.Intent intent = new android.content.Intent(
+                    android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    android.net.Uri.parse("package:" + getPackageName())
+                );
+                startActivityForResult(intent, 5469);
+            }
+        }
     }
 
     private void createNotificationChannel() {
