@@ -10,24 +10,18 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.media.AudioFormat;
-import android.media.AudioTrack;
 
-import com.k2fsa.sherpa.onnx.OfflineTts;
-import com.k2fsa.sherpa.onnx.OfflineTtsConfig;
-import com.k2fsa.sherpa.onnx.OfflineTtsModelConfig;
-import com.k2fsa.sherpa.onnx.OfflineTtsVitsModelConfig;
-import com.k2fsa.sherpa.onnx.GeneratedAudio;
+import java.util.Locale;
 
 public class PopupActivity extends Activity {
 
-    private OfflineTts tts;
-    private AudioTrack audioTrack;
+    private TextToSpeech tts;
     private String speechText;
 
     @Override
@@ -120,108 +114,33 @@ public class PopupActivity extends Activity {
 
     private void initTTS(final String text) {
         requestAudioFocus();
-        new Thread(new Runnable() {
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
-            public void run() {
-                try {
-                    Log.e("SbsPopup", "Initializing Piper TTS via Sherpa-ONNX...");
-                    
-                    OfflineTtsVitsModelConfig vitsConfig = new OfflineTtsVitsModelConfig(
-                        "vits-piper-en_US-amy-low/en_US-amy-low.onnx",
-                        "",
-                        "vits-piper-en_US-amy-low/tokens.txt",
-                        "vits-piper-en_US-amy-low/espeak-ng-data",
-                        "",
-                        1.0f,
-                        1.0f,
-                        1.0f
-                    );
-                    
-                    OfflineTtsModelConfig modelConfig = new OfflineTtsModelConfig(
-                        vitsConfig,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        1,
-                        true,
-                        "cpu"
-                    );
-
-                    OfflineTtsConfig ttsConfig = new OfflineTtsConfig(
-                        modelConfig,
-                        "",
-                        "",
-                        1,
-                        1.0f
-                    );
-
-                    tts = new OfflineTts(getAssets(), ttsConfig);
-                    
-                    Log.e("SbsPopup", "Piper TTS initialized. Generating audio for: " + text);
-                    GeneratedAudio audio = tts.generate(text, 0, 1.0f);
-                    
-                    if (audio != null && audio.getSamples() != null) {
-                        playAudio(audio.getSamples(), audio.getSampleRate());
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("SbsPopup", "TTS: Language not supported");
                     } else {
-                        Log.e("SbsPopup", "TTS Generation failed (null audio)");
+                        Log.e("SbsPopup", "TTS Initialized. Speaking: " + text);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "SbsPopupTTS");
+                        } else {
+                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+                        }
                     }
-                } catch (Exception e) {
-                    Log.e("SbsPopup", "Error in PIPER TTS: " + e.getMessage());
-                    e.printStackTrace();
+                } else {
+                    Log.e("SbsPopup", "TTS Initialization failed");
                 }
             }
-        }).start();
-    }
-
-    private void playAudio(float[] samples, int sampleRate) {
-        try {
-            int bufferSizeInBytes = AudioTrack.getMinBufferSize(
-                sampleRate,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_FLOAT
-            );
-
-            audioTrack = new AudioTrack.Builder()
-                .setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                        .build())
-                .setAudioFormat(new AudioFormat.Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_FLOAT)
-                        .setSampleRate(sampleRate)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build())
-                .setBufferSizeInBytes(bufferSizeInBytes)
-                .setTransferMode(AudioTrack.MODE_STREAM)
-                .build();
-
-            audioTrack.play();
-            audioTrack.write(samples, 0, samples.length, AudioTrack.WRITE_BLOCKING);
-            Log.e("SbsPopup", "Audio playback finished.");
-            
-            // Release track when done
-            audioTrack.stop();
-            audioTrack.release();
-            audioTrack = null;
-
-        } catch (Exception e) {
-            Log.e("SbsPopup", "Error playing AudioTrack: " + e.getMessage());
-        }
+        });
     }
 
     @Override
     protected void onDestroy() {
         if (tts != null) {
-            tts.release();
-        }
-        if (audioTrack != null) {
-            try {
-                audioTrack.stop();
-                audioTrack.release();
-            } catch (Exception e) {}
+            tts.stop();
+            tts.shutdown();
         }
         super.onDestroy();
     }
