@@ -40,6 +40,24 @@ public class MainActivity extends BridgeActivity {
                 startActivityForResult(intent, 5469);
             }
         }
+
+        // --- Call Feature Permissions ---
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] permissions;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissions = new String[]{
+                    android.Manifest.permission.RECORD_AUDIO,
+                    android.Manifest.permission.CAMERA,
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                };
+            } else {
+                permissions = new String[]{
+                    android.Manifest.permission.RECORD_AUDIO,
+                    android.Manifest.permission.CAMERA
+                };
+            }
+            requestPermissions(permissions, 1234);
+        }
     }
 
     private void createNotificationChannel() {
